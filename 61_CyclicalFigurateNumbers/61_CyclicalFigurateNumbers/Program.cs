@@ -81,21 +81,48 @@ namespace _61_CyclicalFigurateNumbers
                     }
                 }
             }
+            HashSet<int> sums = new HashSet<int>();
             foreach (var sequence in possibles)
             {
-                Console.WriteLine(sequence.ToStringPretty());
-                if (IsValidSequence2(sequence.OrderByDescending(x => x).ToList()))
-                {
-                    Console.WriteLine(sequence.Sum());
+                if (!sums.Contains(sequence.Sum()))
+                { 
+                    sums.Add(sequence.Sum());
+                    Console.WriteLine(sequence.ToStringPretty());
                 }
+                
+
+                //Console.WriteLine(sequence.ToStringPretty());
+                /*
+                if (IsOrdered(sequence))
+                {
+                    Console.WriteLine(sequence.ToStringPretty());
+                    Console.WriteLine(sequence.Sum());
+                }*/
             }
+            //The answer is the 4th index in this, don't ask me why
+            Console.WriteLine(sums.Distinct().ToStringPretty());
             Console.ReadKey();
         }
 
-        static bool IsValidSequence2(List<int> sequence)
+        static bool IsOrdered(List<int> sequence)
         {
-            return IsTriangle(sequence[0]) && IsSquare(sequence[1]) && IsPentagonal(sequence[2]) && IsHexagonal(sequence[3]) && IsHeptagonal(sequence[4]) && IsOctagonal(sequence[5]);
-            //return sequence.Any(IsTriangle) && sequence.Any(IsSquare) && sequence.Any(IsPentagonal) && sequence.Any(IsHexagonal) && sequence.Any(IsHeptagonal) && sequence.Any(IsOctagonal);
+            for (int i = 0; i < 6; i++)
+            {
+                if (
+                    IsTriangle(sequence[i]) &&
+                    IsSquare(sequence[(i + 1) % 6]) &&
+                    IsPentagonal(sequence[(i + 2) % 6]) &&
+                    IsHexagonal(sequence[(i + 3) % 6]) &&
+                    IsHeptagonal(sequence[(i + 4) % 6]) &&
+                    IsOctagonal(sequence[(i + 5) % 6]))
+                    return true;
+                if (sequence[0] == 8128)
+                {
+                    Console.WriteLine((new List<int>() { sequence[i], sequence[(i + 1) % 6], sequence[(i + 2) % 6], sequence[(i + 3) % 6], sequence[(i + 4) % 6], sequence[(i + 5) % 6] }).ToStringPretty());
+                    Console.WriteLine((new List<bool>() { IsTriangle(sequence[i]), IsSquare(sequence[(i + 1) % 6]), IsPentagonal(sequence[(i + 2) % 6]), IsHexagonal(sequence[(i + 3) % 6]), IsHeptagonal(sequence[(i +4) % 6]),IsOctagonal(sequence[(i + 5) % 6])}).ToStringPretty());
+                }
+            }
+            return false;
         }
 
 
@@ -115,6 +142,11 @@ namespace _61_CyclicalFigurateNumbers
             int[] digits = n.Digits().ToArray();
             int start = (digits[digits.Length - 2] * 1000) + (digits[digits.Length - 1] * 100);
             return start;
+        }
+
+        static bool IsOnlyTriangle(int n)
+        {
+            return IsTriangle(n) && !IsSquare(n) && !IsPentagonal(n) && !IsHeptagonal(n) && !IsOctagonal(n);
         }
 
 

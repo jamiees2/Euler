@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SharpBag.Math;
+using SharpBag.Strings;
 
 namespace _60_PrimePairSets
 {
@@ -11,29 +12,58 @@ namespace _60_PrimePairSets
         static void Main(string[] args)
         {
             int[] primes = BagMath.SieveOfEratosthenes(30000).ToArray();
-            HashSet<int> primesCheck = new HashSet<int>(BagMath.SieveOfEratosthenes(1000000));
-            Console.WriteLine(primes.Length);
-            for (int i = 1; i < primes.Count(x => x < 10); i++)
+            HashSet<ulong> primesCheck = new HashSet<ulong>(BagMath.SieveOfEratosthenes((ulong)1000000));
+            List<int> sums = new List<int>();
+            //Console.WriteLine(primes.Length);
+            foreach (var prime1 in primes.Where(x => 5 < x && x < 13))
             {
-                for (int j = i + 1; j < primes.Count(x => x < 100); j++)
+                foreach (var prime2 in primes.Where(x => 
+                    primesCheck.Contains(ulong.Parse("" + prime1 + x)) &&
+                    primesCheck.Contains(ulong.Parse("" + x + prime1))
+                    && x != prime1
+                    ))
                 {
-                    for (int k = j + 1; k < primes.Count(x => x < 1000); k++)
+                    foreach (var prime3 in primes.Where(x => 
+                        primesCheck.Contains(ulong.Parse("" + prime1 + x)) && 
+                        primesCheck.Contains(ulong.Parse("" + x + prime1)) &&
+                        primesCheck.Contains(ulong.Parse("" + prime2 + x)) &&
+                        primesCheck.Contains(ulong.Parse("" + x + prime2))
+                        && x != prime1 && x != prime2
+                        ))
                     {
-                        for (int l = k + 1; l < primes.Count(x => x < 10000); l++)
+                        foreach (var prime4 in primes.Where(x =>
+                        primesCheck.Contains(ulong.Parse("" + prime1 + x)) &&
+                        primesCheck.Contains(ulong.Parse("" + x + prime1)) &&
+                        primesCheck.Contains(ulong.Parse("" + prime2 + x)) &&
+                        primesCheck.Contains(ulong.Parse("" + x + prime2)) &&
+                        primesCheck.Contains(ulong.Parse("" + prime3 + x)) &&
+                        primesCheck.Contains(ulong.Parse("" + x + prime3))
+                        && x != prime1 && x != prime2 && x != prime3
+                        ))
                         {
-                                
-                                if (pairs(primes[i], primes[j], primes[k], primes[l]/*, primes[m]*/).All(primesCheck.Contains))
-                                {
+                            foreach (var prime5 in primes.Where(x =>
+                            primesCheck.Contains(ulong.Parse("" + prime1 + x)) &&
+                            primesCheck.Contains(ulong.Parse("" + x + prime1)) &&
+                            primesCheck.Contains(ulong.Parse("" + prime2 + x)) &&
+                            primesCheck.Contains(ulong.Parse("" + x + prime2)) &&
+                            primesCheck.Contains(ulong.Parse("" + prime3 + x)) &&
+                            primesCheck.Contains(ulong.Parse("" + x + prime3)) &&
+                            primesCheck.Contains(ulong.Parse("" + prime4 + x)) &&
+                            primesCheck.Contains(ulong.Parse("" + x + prime4))
+                            && x != prime1 && x != prime2 && x != prime3 && x != prime4
+                            ))
+                            {
+                                int[] prime = (new int[] { prime1, prime2, prime3, prime4, prime5 });
+                                Console.WriteLine(prime.ToStringPretty());
+                                sums.Add(prime.Sum());
+                                //Console.WriteLine(prime.Sum());
+                            }
 
-                                    Console.WriteLine(primes[i] + " " + primes[j] + " " + primes[k] + " " + primes[l] + " "/* + primes[m]*/);
-                                    break;
-                                }
-                            
-                            
                         }
                     }
                 }
             }
+            Console.WriteLine(sums.Min());
             Console.ReadKey();
         }
 

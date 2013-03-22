@@ -12,24 +12,13 @@ namespace _63_PowerfulDigitCount
         static void Main(string[] args)
         {
             int result = 0;
-
-            int digits = 0;
-            int i = 2;
-            while (BigInteger.Pow(2,i).ToString().Length <= i)
+            var n = 1;
+            var lower = 0;
+            while (lower < 10)
             {
-                BigInteger n = 0;
-                int j = 2;
-                while (digits <= i)
-                {
-                    n = BigInteger.Pow(j, i);
-                    digits = n.ToString().Length;
-                    if (digits == i)
-                    {
-                        result++;
-                    }
-                    j++;
-                }
-                i++;
+                lower = (int) Math.Ceiling(Math.Pow(10, (n - 1.0)/n));
+                result += 10 - lower;
+                n++;
             }
             Console.WriteLine(result);
             Console.ReadKey();
